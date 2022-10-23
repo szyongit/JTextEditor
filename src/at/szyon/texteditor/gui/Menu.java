@@ -6,8 +6,12 @@ import at.szyon.texteditor.logger.Logger;
 import at.szyon.texteditor.main.Application;
 
 import javax.swing.*;
+import javax.swing.colorchooser.ColorSelectionModel;
+import javax.swing.plaf.ColorChooserUI;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -178,6 +182,14 @@ public class Menu {
                 ;
 
                 JTextArea textInputArea = new JTextArea("0");
+                textInputArea.addKeyListener(new KeyAdapter() {
+                    @Override
+                    public void keyPressed(KeyEvent e) {
+                        if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+                            e.consume();
+                        }
+                    }
+                });
                 textInputArea.setEditable(true);
                 JTextArea textOutputArea = new JTextArea();
                 textOutputArea.setEditable(false);
@@ -301,7 +313,11 @@ public class Menu {
     private static void optionsMenu() {
         //OPTIONS
         JMenu optionsMenu = new JMenu("Options");
-        JMenuItem optionsMenuFont = new JMenuItem(new AbstractAction("Font style") {
+
+        JMenu optionsFontMenu = new JMenu("Font");
+        optionsFontMenu.setMargin(new Insets(2, -20, 2, 2));
+        optionsMenu.add(optionsFontMenu);
+        JMenuItem optionsFontMenuItemStyle = new JMenuItem(new AbstractAction("Style") {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String input = (String) JOptionPane.showInputDialog(
@@ -323,9 +339,66 @@ public class Menu {
                 Logger.log("Set font to: " + Gui.TEXT_AREA.getFont().getName());
             }
         });
-        optionsMenuFont.setIcon(null);
-        optionsMenuFont.setMargin(new Insets(2, -20, 2, 2));
-        optionsMenu.add(optionsMenuFont);
+        optionsFontMenuItemStyle.setIcon(null);
+        optionsFontMenuItemStyle.setMargin(new Insets(2, -20, 2, 2));
+        optionsFontMenu.add(optionsFontMenuItemStyle);
+
+        JMenu optionsVisualsMenu = new JMenu("Visuals");
+        optionsVisualsMenu.setMargin(new Insets(2, -20, 2, 2));
+        optionsMenu.add(optionsVisualsMenu);
+
+        JMenuItem optionsVisualsMenuItemTextColor = new JMenuItem(new AbstractAction("Text color") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Color color = JColorChooser.showDialog(Gui.FRAME, "Choose text color", Gui.TEXT_AREA.getForeground(), false);
+                Gui.TEXT_AREA.setForeground(color);
+
+                Logger.log("Set text color to: " + Gui.TEXT_AREA.getForeground().toString());
+            }
+        });
+        optionsVisualsMenuItemTextColor.setIcon(null);
+        optionsVisualsMenuItemTextColor.setMargin(new Insets(2, -20, 2, 2));
+        optionsVisualsMenu.add(optionsVisualsMenuItemTextColor);
+
+        JMenuItem optionsVisualsMenuItemBackgroundColor = new JMenuItem(new AbstractAction("Background color") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Color color = JColorChooser.showDialog(Gui.FRAME, "Choose background color", Gui.TEXT_AREA.getBackground(), false);
+                Gui.TEXT_AREA.setBackground(color);
+
+                Logger.log("Set background color to: " + Gui.TEXT_AREA.getBackground().toString());
+            }
+        });
+        optionsVisualsMenuItemBackgroundColor.setIcon(null);
+        optionsVisualsMenuItemBackgroundColor.setMargin(new Insets(2, -20, 2, 2));
+        optionsVisualsMenu.add(optionsVisualsMenuItemBackgroundColor);
+
+        JMenuItem optionsVisualsMenuItemSelectedTextColor = new JMenuItem(new AbstractAction("Selected text color") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Color color = JColorChooser.showDialog(Gui.FRAME, "Choose selected text color", Gui.TEXT_AREA.getSelectedTextColor(), false);
+                Gui.TEXT_AREA.setSelectedTextColor(color);
+
+                Logger.log("Set selected text color to: " + Gui.TEXT_AREA.getSelectedTextColor().toString());
+            }
+        });
+        optionsVisualsMenuItemSelectedTextColor.setIcon(null);
+        optionsVisualsMenuItemSelectedTextColor.setMargin(new Insets(2, -20, 2, 2));
+        optionsVisualsMenu.add(optionsVisualsMenuItemSelectedTextColor);
+
+        JMenuItem optionsVisualsMenuItemSelectionColor = new JMenuItem(new AbstractAction("Selection color") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Color color = JColorChooser.showDialog(Gui.FRAME, "Choose selection color", Gui.TEXT_AREA.getSelectionColor(), false);
+                Gui.TEXT_AREA.setSelectionColor(color);
+
+                Logger.log("Set selection color to: " + Gui.TEXT_AREA.getSelectionColor().toString());
+            }
+        });
+        optionsVisualsMenuItemSelectionColor.setIcon(null);
+        optionsVisualsMenuItemSelectionColor.setMargin(new Insets(2, -20, 2, 2));
+        optionsVisualsMenu.add(optionsVisualsMenuItemSelectionColor);
+
 
         JCheckBoxMenuItem optionsMenuEncryption = new JCheckBoxMenuItem(new AbstractAction("Enable file encryption") {
             @Override
@@ -336,6 +409,7 @@ public class Menu {
         });
         optionsMenuEncryption.setState(isEncryptionEnabled);
         optionsMenuEncryption.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+        optionsMenuEncryption.setMargin(new Insets(2, -4, 2, 2));
         optionsMenu.add(optionsMenuEncryption);
 
         Gui.menuBar.add(optionsMenu);
